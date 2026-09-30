@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>Water Conveyance Systems – Douro NUTS III (PT11D)</title>
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+body{background:#fff;font-family:Helvetica,Arial,sans-serif;color:#111}
+.board{width:1400px;margin:0 auto;border:6px solid #111;display:grid;grid-template-columns:1fr 380px;grid-template-rows:auto auto;padding:40px}
+h1{font-size:34px;font-weight:500;grid-column:1/-1;margin-bottom:24px;max-width:640px;line-height:1.25}
+.mapwrap{position:relative}
+.mapwrap svg{width:100%;height:auto;display:block}
+.legend h3{font-size:22px;font-weight:600;margin:120px 0 18px}
+.leg{display:grid;grid-template-columns:1fr 1fr;gap:7px 18px;font-size:15px}
+.leg div{display:flex;align-items:center;gap:10px}
+.sw{width:52px;height:20px;border:1px solid #999;flex:none}
+.notes{grid-column:1/-1;font-size:15px;line-height:1.6;max-width:1000px;margin-top:18px}
+.src{grid-column:1/-1;font-size:11px;color:#888;margin-top:10px}
+</style>
+</head>
+<body>
+<div class="board">
+  <h1>Mapping of all water conveyance systems across the territory<br><span style="color:#555">Douro NUTS III (PT11D)</span></h1>
+  <div class="mapwrap"><svg id="map" viewBox="0 0 1000 700"></svg></div>
+  <div class="legend"><h3>Annual<br>Precipitation (mm)</h3><div class="leg" id="leg"></div>
+    <div style="margin-top:26px;font-size:14px;line-height:1.7">
+      <div><span style="display:inline-block;width:34px;border-top:4px solid #1d4e9e;vertical-align:middle"></span> perennial river</div>
+      <div><span style="display:inline-block;width:34px;border-top:3px dashed #1d4e9e;vertical-align:middle"></span> seasonal stream</div>
+      <div><span style="display:inline-block;width:12px;height:9px;background:#111;vertical-align:middle"></span> large dam</div>
+    </div>
+  </div>
+  <div class="notes">The Douro crosses the region westward from Spain, fed from the north by the Sabor, Tua and Corgo and from the south by the Côa, Távora and Varosa. Rainfall follows a steep west–east gradient: over 1,400 mm on the Marão barrier down to 400–600 mm in the Douro Superior — the driest point of the territory at Barca d'Alva. Three large Douro dams regulate the main stem inside the NUTS III (Pocinho, Valeira, Régua) plus Foz Tua on the Tua; hill terraces and small weirs convey the rest to vineyard and olive plots.</div>
+  <div class="src">Boundary: Eurostat GISCO NUTS 2024 (PT11D) · Rivers/dams schematic after SNIAmb/APA + EDP · Rainfall gradient schematic after IPMA 1991–2020 normals (Marão &gt;1400 mm → Douro Superior 400–600 mm)</div>
+</div>
+<script>
+const R=6378137, RAD=Math.PI/180;
+const LON0=-8.0, LAT0=40.70, LON1=-6.55, LAT1=41.62;
+const X0=R*LON0*RAD, X1=R*LON1*RAD;
+const Y0=R*Math.log(Math.tan(Math.PI/4+(LAT0*RAD)/2)), Y1=R*Math.log(Math.tan(Math.PI/4+(LAT1*RAD)/2));
+const P=(lon,lat)=>[((R*lon*RAD-X0)/(X1-X0)*1000).toFixed(1),((Y1-R*Math.log(Math.tan(Math.PI/4+(lat*RAD)/2)))/(Y1-Y0)*700).toFixed(1)];
+const BOUND=[[-7.3653,41.4404],[-7.3513,41.3668],[-7.2857,41.3323],[-7.2246,41.2368],[-7.1004,41.2443],[-7.0551,41.3040],[-6.8271,41.2052],[-6.7395,41.2408],[-6.6898,41.2052],[-6.8078,41.0487],[-6.9299,41.0293],[-7.0551,40.9675],[-7.1520,40.9292],[-7.1943,41.0286],[-7.3628,41.0109],[-7.3361,40.9452],[-7.4157,40.9099],[-7.4542,40.8126],[-7.5280,40.8688],[-7.5908,40.8409],[-7.6896,40.8634],[-7.7012,40.9331],[-7.9157,41.0200],[-7.8596,41.1129],[-7.8968,41.1657],[-7.8841,41.2352],[-7.9077,41.3026],[-7.7887,41.4114],[-7.6058,41.4025],[-7.4934,41.4506],[-7.4223,41.5160],[-7.3653,41.4404]];
+const DOURO=[[41.05,-6.93],[41.08,-7.05],[41.13,-7.11],[41.16,-7.25],[41.18,-7.40],[41.19,-7.54],[41.16,-7.78],[41.16,-7.95]];
+const TRIBS=[
+ {s:[[-7.05,40.78],[-7.08,40.92],[-7.11,41.05]],d:[[-7.02,40.68],[-7.05,40.78]],n:'Côa'},
+ {s:[[-7.02,41.32],[-7.11,41.18]],d:[[-6.92,41.50],[-7.02,41.32]],n:'Sabor'},
+ {s:[[-7.40,41.38],[-7.42,41.21]],d:[[-7.34,41.58],[-7.40,41.38]],n:'Tua'},
+ {s:[[-7.77,41.30],[-7.78,41.16]],d:[[-7.75,41.46],[-7.77,41.30]],n:'Corgo'},
+ {s:[[-7.57,41.00],[-7.55,41.10]],d:[[-7.60,40.88],[-7.57,41.00]],n:'Távora'},
+ {s:[[-7.77,41.05],[-7.75,41.12]],d:[[-7.80,40.94],[-7.77,41.05]],n:'Varosa'},
+ {s:[[-7.53,41.25],[-7.54,41.19]],d:[[-7.50,41.33],[-7.53,41.25]],n:'Pinhão'},
+ {s:[[-7.38,41.20],[-7.40,41.15]],d:[[-7.35,41.28],[-7.38,41.20]],n:'Torto'}
+];
+const DAMS=[[-7.113,41.134,'Pocinho'],[-7.375,41.157,'Valeira'],[-7.77,41.163,'Régua'],[-7.42,41.208,'Foz Tua']];
+const BANDS=[[-8.0,-7.85,'#7fb8d9','1400+'],[-7.85,-7.70,'#93c4de','1201–1400'],[-7.70,-7.50,'#a9cfe3','1001–1200'],[-7.50,-7.30,'#c2dcea','801–1000'],[-7.30,-7.05,'#d8e7ef','601–800'],[-7.05,-6.55,'#e8e4d8','400–600']];
+const path=pts=>pts.map((p,i)=>(i?'L':'M')+P(p[0],p[1]).join(' ')).join(' ')+' Z';
+const line=pts=>pts.map((p,i)=>(i?'L':'M')+P(p[1],p[0]).join(' ')).join(' ');
+const bPath=path(BOUND);
+let h=`<defs><clipPath id="clip"><path d="${bPath}"/></clipPath></defs>`;
+h+=BANDS.map(b=>{const [x0]=P(b[0],41),[x1]=P(b[1],41);return `<rect x="${x0}" y="0" width="${(x1-x0).toFixed(1)}" height="700" fill="${b[2]}" clip-path="url(#clip)" opacity="0.85"/>`;}).join('');
+h+=`<path d="${bPath}" fill="none" stroke="#111" stroke-width="3.5"/>`;
+h+=`<path d="${line(DOURO)}" fill="none" stroke="#1d4e9e" stroke-width="4.5"/>`;
+TRIBS.forEach(t=>{ h+=`<path d="${line(t.s)}" fill="none" stroke="#1d4e9e" stroke-width="2.5"/>`;
+  h+=`<path d="${line(t.d)}" fill="none" stroke="#1d4e9e" stroke-width="2" stroke-dasharray="6 5"/>`; });
+DAMS.forEach(d=>{ const [x,y]=P(d[0],d[1]);
+  h+=`<rect x="${x-7}" y="${y-5}" width="14" height="10" fill="#111"/><text x="${x}" y="${(+y+24)}" font-size="14" text-anchor="middle" font-family="Helvetica,Arial" fill="#333">${d[2]}</text>`; });
+{ const [x,y]=P(-7.44,41.31);
+  h+=`<circle cx="${x}" cy="${y}" r="5" fill="#111"/><text x="${x+10}" y="${+y+5}" font-size="15" font-family="Helvetica,Arial" fill="#333">Vila Real</text>`; }
+document.getElementById('map').innerHTML=h;
+document.getElementById('leg').innerHTML=[['1400+','#7fb8d9'],['1201–1400','#93c4de'],['1001–1200','#a9cfe3'],['801–1000','#c2dcea'],['601–800','#d8e7ef'],['400–600','#e8e4d8']].map(c=>`<div><span class="sw" style="background:${c[1]}"></span>${c[0]}</div>`).join('');
+</script>
+</body>
+</html>
