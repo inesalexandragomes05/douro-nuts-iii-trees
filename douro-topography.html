@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>Site Macro Analysis – Topography – Douro NUTS III (PT11D)</title>
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+body{background:#fff;font-family:Helvetica,Arial,sans-serif;color:#111}
+.board{width:1400px;margin:0 auto;border:6px solid #111;display:grid;grid-template-columns:44px 1fr 1fr;grid-template-rows:470px 540px}
+.side{writing-mode:vertical-rl;transform:rotate(180deg);display:flex;align-items:center;justify-content:center;font-size:21px;border-right:1px solid #eee;padding:10px 0}
+.panel{position:relative;overflow:hidden;border:1px solid #e3e3e3}
+.panel img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover}
+.panel svg{position:absolute;inset:0;width:100%;height:100%}
+.badge{position:absolute;top:12px;left:50%;transform:translateX(-50%);background:rgba(255,255,255,.88);padding:2px 12px;font-size:11px;letter-spacing:.1em;white-space:nowrap}
+.head{text-align:right;padding:30px 34px 0}
+.head h1{font-size:29px;font-weight:800}
+.head h2{font-size:22px;font-weight:400;font-style:italic;color:#666}
+.minimap{width:100%;height:300px;margin-top:14px;border:1px solid #ddd;position:relative;overflow:hidden}
+.minimap img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover}
+.minimap svg{position:absolute;inset:0;width:100%;height:100%}
+.legend{padding:16px 34px 0;font-size:14px}
+.sw{display:inline-block;width:32px;height:13px;margin-right:10px;vertical-align:middle;border:1px solid #999}
+.desc{padding:12px 34px 0;font-size:15px;line-height:1.55}
+.stats{padding:14px 34px 0;font-size:15px;line-height:1.6}
+.elevscale{position:absolute;right:0;top:0;bottom:0;width:62px;display:flex;flex-direction:column;font-size:11px;font-weight:700;z-index:5}
+.elevscale div{flex:1;display:flex;align-items:center;justify-content:center;color:#333;border-bottom:1px solid rgba(255,255,255,.65)}
+.src{font-size:11px;color:#888;padding:8px 34px}
+</style>
+</head>
+<body>
+<div class="board">
+  <div class="side">Carte du Bassin du Douro — NUTS III Douro (PT11D)</div>
+  <div class="panel"><img src="panel-basin.png"><svg id="ov1" viewBox="0 0 1000 700" preserveAspectRatio="none"></svg><div class="badge">ATLANTIC → DOURO · BASSIN DU DOURO</div></div>
+  <div class="head"><h1>Site Macro Analysis – Topography</h1><h2>Terrain Elevation and Soil</h2>
+    <div class="minimap"><img src="panel-rock.png"><svg id="ov2" viewBox="0 0 1000 700" preserveAspectRatio="none"></svg></div>
+  </div>
+  <div class="side">Terrain Elevation — Marão + Montemuro / Douro Valley</div>
+  <div class="panel"><img src="panel-elev.png"><svg id="ov3" viewBox="0 0 1000 700" preserveAspectRatio="none"></svg><div class="elevscale" id="escale"></div></div>
+  <div>
+    <div class="legend"><b>Type of Rock</b> <span style="color:#888">(simplified, after LNEG)</span><br><br>
+      <span class="sw" style="background:#a08b62"></span>Schist-Greywacke — Grupo do Douro (Xisto, low permeability, dominant)<br><br>
+      <span class="sw" style="background:#d9c48a"></span>Granite — Marão–Montemuro massifs (fractured, variable)<br><br>
+      <span class="sw" style="background:#cfd8e6"></span>Alluvium / valley fill — high porosity, along the Douro
+    </div>
+    <div class="desc">The Marão massif rises to 1,416 m and Montemuro to ~1,381 m in the west, while the Douro river falls to ~40–80 m at Régua / Foz Côa. This enclosed valley topography drives hydrology (tributaries drain toward the Douro) and climate (mountains block Atlantic air — summer aridity, winter cold-air pooling on valley floors).</div>
+    <div class="stats"><b>Vila Real (capital)</b><br>Average elevation: ~442 m<br>Minimum: ~250 m (Douro edge) · Maximum: ~650 m (urban hills)<br><br><b>NUTS III Douro (PT11D) — 19 municipalities</b><br>Min: ~40 m · Max: 1,416 m (Serra do Marão)</div>
+    <div class="src">Boundaries: Eurostat GISCO NUTS 2024 (PT11D) · Base: Esri World Imagery / Street / Topo · Relief: SRTM</div>
+  </div>
+</div>
+<script>
+const R=6378137, RAD=Math.PI/180;
+const LON0=-7.95, LAT0=40.75, LON1=-6.60, LAT1=41.58;
+const X0=R*LON0*RAD, X1=R*LON1*RAD;
+const Y0=R*Math.log(Math.tan(Math.PI/4+(LAT0*RAD)/2)), Y1=R*Math.log(Math.tan(Math.PI/4+(LAT1*RAD)/2));
+function px(lon,lat){ const x=R*lon*RAD, y=R*Math.log(Math.tan(Math.PI/4+(lat*RAD)/2));
+  return [((x-X0)/(X1-X0)*1000).toFixed(1), ((Y1-y)/(Y1-Y0)*700).toFixed(1)]; }
+const BOUND=[[-7.3653,41.4404],[-7.3513,41.3668],[-7.2857,41.3323],[-7.2246,41.2368],[-7.1004,41.2443],[-7.0551,41.3040],[-6.8271,41.2052],[-6.7395,41.2408],[-6.6898,41.2052],[-6.8078,41.0487],[-6.9299,41.0293],[-7.0551,40.9675],[-7.1520,40.9292],[-7.1943,41.0286],[-7.3628,41.0109],[-7.3361,40.9452],[-7.4157,40.9099],[-7.4542,40.8126],[-7.5280,40.8688],[-7.5908,40.8409],[-7.6896,40.8634],[-7.7012,40.9331],[-7.9157,41.0200],[-7.8596,41.1129],[-7.8968,41.1657],[-7.8841,41.2352],[-7.9077,41.3026],[-7.7887,41.4114],[-7.6058,41.4025],[-7.4934,41.4506],[-7.4223,41.5160],[-7.3653,41.4404]];
+const RIVER=[[41.05,-6.93],[41.08,-7.05],[41.13,-7.11],[41.16,-7.25],[41.18,-7.40],[41.19,-7.54],[41.16,-7.78],[41.16,-7.95]];
+const GRANITE=[[-7.98,41.30],[-7.86,41.28],[-7.82,41.18],[-7.88,41.05],[-7.98,41.08],[-8.02,41.20]];
+function path(pts){ return pts.map((p,i)=>(i?'L':'M')+px(p[0],p[1]).join(' ')).join(' ')+' Z'; }
+function line(pts){ return pts.map((p,i)=>(i?'L':'M')+px(p[1],p[0]).join(' ')).join(' '); }
+const bPath=path(BOUND), rPath=line(RIVER), gPath=path(GRANITE);
+function label(lon,lat,txt,size){ const [x,y]=px(lon,lat); return `<text x="${x}" y="${y}" font-size="${size||16}" font-weight="700" fill="#fff" stroke="#333" stroke-width="3" paint-order="stroke" text-anchor="middle" font-family="Helvetica,Arial">${txt}</text>`; }
+const NS='http://www.w3.org/2000/svg';
+['ov1','ov2','ov3'].forEach((id,k)=>{
+  const svg=document.getElementById(id);
+  let inner=`<path d="${bPath}" fill="rgba(201,168,106,0.10)" stroke="#111" stroke-width="3"/>`
+    +`<path d="${rPath}" fill="none" stroke="#1d4e9e" stroke-width="4"/>`;
+  if(k===1){ inner+=`<path d="${gPath}" fill="rgba(217,196,138,0.75)" stroke="#8a744f" stroke-width="1.5"/>`; }
+  if(k===0){ inner+=label(-7.44,41.30,'Vila Real',15); }
+  inner+=label(-7.78,41.13,'Peso da Régua',13)+label(-7.11,41.04,'Foz Côa',13)+label(-7.80,41.22,'MARÃO 1416 m',14);
+  svg.innerHTML=inner;
+});
+document.getElementById('escale').innerHTML=[[1500,'#c94f4f'],[1300,'#d06a5a'],[1100,'#d68465'],[950,'#dca070'],[800,'#e2b97e'],[650,'#e8d189'],[550,'#eee699'],[450,'#e8eaa0'],[350,'#cfe0a0'],[250,'#aed6a0'],[150,'#93c9a0'],[80,'#8fc0a5'],[40,'#a5c9b0'],[0,'#b9d4e4']].map(s=>`<div style="background:${s[1]}">${s[0]} m</div>`).join('');
+</script>
+</body>
+</html>
